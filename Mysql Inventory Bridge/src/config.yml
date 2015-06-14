@@ -1,0 +1,27 @@
+# default config.yml for MysqlInventoryBridge
+# config version 1.2
+
+#MySQL Database details
+database:
+    mysql:
+        #MySQL server address
+        host: 127.0.0.1
+        #MySQL server port (default 3306)
+        port: 3306
+        #Database name (NOTE! You need to create the database, then the plugin will create the tables.)
+        databaseName: 'mydatabase'
+        #Tables name (the plugin will auto create it)
+        tableName: 'meb_inventory'
+        #User name
+        user: 'admin'
+        #User password
+        password: 'cheesecake'
+        
+        
+#Other configurable options
+General:
+    #Login economy sync delay in milliseconds (default 1000 milliseconds = 1 second)
+    #This delay is needed in bungeecord setups, because when you move between servers the quit and login takes place almost in the same time.
+    loginSyncDelay: 1000
+    #Set this to false to disable the sync of players armor. |  (true or false)
+    syncArmorEnabled: true

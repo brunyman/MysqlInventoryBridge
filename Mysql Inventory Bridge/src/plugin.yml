@@ -1,0 +1,7 @@
+name: MysqlInventoryBridge
+main: net.craftersland.bridge.inventory.Inv
+version: 1.2
+author: CraftersLand
+website: www.craftersland.net
+load: STARTUP
+description: Sync players inventorys over many servers using MySQL.
