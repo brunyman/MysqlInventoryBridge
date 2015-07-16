@@ -22,6 +22,7 @@ public class InvMysqlInterface {
 	}
 	
 	public boolean hasAccount(UUID player) {
+		inv.getDatabaseManager().checkConnection();
 		try {
 	    	  tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 	 
@@ -36,12 +37,13 @@ public class InvMysqlInterface {
 	        	return true;
 	        }
 	      } catch (SQLException e) {
-	        e.printStackTrace();
+	    	  Inv.log.severe("Error: " + e.getMessage());
 	      }
 	      return false;
 	}
 	
 	public boolean createAccount(UUID uuid, Player player) {
+		inv.getDatabaseManager().checkConnection();
 		try {
 			tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 			 
@@ -52,17 +54,17 @@ public class InvMysqlInterface {
 	        preparedStatement.setString(2, player.getName().toString() + "");
 	        preparedStatement.setString(3, "none");
 	        preparedStatement.setString(4, "none");
-	        preparedStatement.setString(5, String.valueOf(player.getLastPlayed()) + "");
+	        preparedStatement.setString(5, String.valueOf(System.currentTimeMillis()));
 	        
 	        preparedStatement.executeUpdate();
 	        return true;
 	      } catch (SQLException e) {
-	        e.printStackTrace();
+	    	  Inv.log.severe("Error: " + e.getMessage());
 	      }
 		return false;
 	}
 	
-	public boolean setInventory(UUID uuid, Player player, String inventory, String armor, String lastPlayed) {
+	public boolean setInventory(UUID uuid, Player player, String inventory, String armor) {
 		if (!hasAccount(uuid)) {
 			createAccount(uuid, player);
 		}
@@ -75,13 +77,13 @@ public class InvMysqlInterface {
 			preparedUpdateStatement.setString(1, player.getName().toString() + "");
 			preparedUpdateStatement.setString(2, inventory + "");
 			preparedUpdateStatement.setString(3, armor + "");
-			preparedUpdateStatement.setString(4, lastPlayed + "");
+			preparedUpdateStatement.setString(4, String.valueOf(System.currentTimeMillis()));
 			preparedUpdateStatement.setString(5, uuid.toString() + "");
 			
 			preparedUpdateStatement.executeUpdate();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Inv.log.severe("Error: " + e.getMessage());
 		}
         return false;
 	}
@@ -104,7 +106,7 @@ public class InvMysqlInterface {
 	        	return result.getString("inventory");
 	        }
 	      } catch (SQLException e) {
-	        e.printStackTrace();
+	    	  Inv.log.severe("Error: " + e.getMessage());
 	      }
 		return null;
 	}
@@ -127,7 +129,7 @@ public class InvMysqlInterface {
 	        	return result.getString("armor");
 	        }
 	      } catch (SQLException e) {
-	        e.printStackTrace();
+	    	  Inv.log.severe("Error: " + e.getMessage());
 	      }
 		return null;
 	}

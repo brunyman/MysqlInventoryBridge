@@ -5,11 +5,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+
+import com.comphenix.protocol.utility.StreamSerializer;
 
 public class InventoryUtils {
 	
@@ -90,5 +93,47 @@ public class InventoryUtils {
             throw new IOException("Unable to decode class type.", e);
         }
     }
+	
+	static String saveModdedStacksData(ItemStack[] itemStacks)
+	  {
+	    StringBuilder stringBuilder = new StringBuilder();
+	    for (int i = 0; i < itemStacks.length; i++)
+	    {
+	      if (i > 0) {
+	        stringBuilder.append(";");
+	      }
+	      if ((itemStacks[i] != null) && (itemStacks[i].getType() != Material.AIR)) {
+	        try
+	        {
+	          stringBuilder.append(StreamSerializer.getDefault().serializeItemStack(itemStacks[i]));
+	        }
+	        catch (IOException e)
+	        {
+	          e.printStackTrace();
+	        }
+	      }
+	    }
+	    String string = stringBuilder.toString();
+	    return string;
+	  }
+	
+	static ItemStack[] restoreModdedStacks(String string)
+	  {
+	    String[] strings = string.split(";");
+	    ItemStack[] itemStacks = new ItemStack[strings.length];
+	    for (int i = 0; i < strings.length; i++) {
+	      if (!strings[i].equals("")) {
+	        try
+	        {
+	          itemStacks[i] = StreamSerializer.getDefault().deserializeItemStack(strings[i]);
+	        }
+	        catch (IOException e)
+	        {
+	          e.printStackTrace();
+	        }
+	      }
+	    }
+	    return itemStacks;
+	  }
 
 }

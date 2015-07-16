@@ -1,17 +1,21 @@
 package net.craftersland.bridge.inventory;
 
 import java.io.File;
+import java.sql.PreparedStatement;
 import java.util.logging.Logger;
 
 import net.craftersland.bridge.inventory.database.DatabaseManagerMysql;
 import net.craftersland.bridge.inventory.database.InvMysqlInterface;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Inv extends JavaPlugin {
 	
 	public static Logger log;
+	public boolean useProtocolLib;
 	
 	private ConfigHandler configHandler;
 	private DatabaseManagerMysql databaseManager;
@@ -39,6 +43,19 @@ public class Inv extends JavaPlugin {
             return;
     	}
     	
+    	//Check dependency
+        if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null) {
+        	useProtocolLib = true;
+        	log.info("ProtocolLib dependency found.");
+        } else {
+        	useProtocolLib = false;
+        	log.warning("ProtocolLib dependency not found. No support for modded items NBT data!");
+        }
+    	
+        if (getConfigHandler().getString("database.maintenance.enabled").matches("true")) {
+    		runMaintenance();
+    	}
+        
     	//Register Listeners
     	PluginManager pm = getServer().getPluginManager();
     	pm.registerEvents(new PlayerHandler(this), this);
@@ -51,6 +68,7 @@ public class Inv extends JavaPlugin {
 		if (this.isEnabled()) {
 			//Closing database connection
 			if (databaseManager.getConnection() != null) {
+				savePlayerData();
 				log.info("Closing MySQL connection...");
 				databaseManager.closeDatabase();
 			}
@@ -69,5 +87,48 @@ public class Inv extends JavaPlugin {
 	public InvMysqlInterface getInvMysqlInterface() {
 		return invMysqlInterface;
 	}
+	
+    public void runMaintenance() {
+		
+		Bukkit.getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
+			@Override
+			public void run() {
+				if (databaseManager.getConnection() == null) return;
+				getDatabaseManager().checkConnection();
+				log.info("Database maintenance task started...");
+				
+				long inactivityDays = Long.parseLong(getConfigHandler().getString("database.maintenance.inactivity"));
+				long inactivityMils = inactivityDays * 24 * 60 * 60 * 1000;
+				long curentTime = System.currentTimeMillis();
+				long inactiveTime = curentTime - inactivityMils;
+				String tableName = getConfigHandler().getString("database.mysql.tableName");
+				
+				try {
+					String sql = "DELETE FROM `" + tableName + "` WHERE `last_seen` <?";
+					PreparedStatement preparedStatement = databaseManager.getConnection().prepareStatement(sql);
+					preparedStatement.setString(1, String.valueOf(inactiveTime));
+					
+					preparedStatement.executeUpdate();
+				} catch (Exception e) {
+					log.severe("Error: " + e.getMessage());
+				}
+				
+				log.info("Database maintenance task ended.");
+			}
+		}, 400L);	
+	}
+    
+    private void savePlayerData() {
+    	if (Bukkit.getOnlinePlayers().isEmpty() == true) return;
+		if (databaseManager.checkConnection() == false) return;
+		log.info("Saving players data...");
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (useProtocolLib == true && getConfigHandler().getString("General.enableModdedItemsSupport").matches("true")) {
+				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(p.getInventory().getContents()), InventoryUtils.saveModdedStacksData(p.getInventory().getArmorContents()));
+			} else {
+				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.toBase64(p.getInventory()), InventoryUtils.itemStackArrayToBase64(p.getInventory().getArmorContents()));
+			}
+		}
+    }
 
 }

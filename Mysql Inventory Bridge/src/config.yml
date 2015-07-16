@@ -1,5 +1,5 @@
 # default config.yml for MysqlInventoryBridge
-# config version 1.2
+# config version 1.3
 
 #MySQL Database details
 database:
@@ -16,6 +16,12 @@ database:
         user: 'admin'
         #User password
         password: 'cheesecake'
+    #Remove inactive users from the database. This maintenance task will start each server start with a 2min delay.
+    maintenance:
+        #Enable or disable database maintenance.  | (true or false)
+        enabled: false
+        #Inactivity in days. Default 60 days.
+        inactivity: 60
         
         
 #Other configurable options
@@ -25,3 +31,6 @@ General:
     loginSyncDelay: 1000
     #Set this to false to disable the sync of players armor. |  (true or false)
     syncArmorEnabled: true
+    #Enable modded items support. This will require the ProtocolLib dependency! |  (true or false)
+    #This is needed if you experience item data loss on some mods that save NBT data.
+    enableModdedItemsSupport: false
