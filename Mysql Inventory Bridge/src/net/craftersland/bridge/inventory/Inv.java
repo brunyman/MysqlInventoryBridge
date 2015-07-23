@@ -20,6 +20,7 @@ public class Inv extends JavaPlugin {
 	private ConfigHandler configHandler;
 	private DatabaseManagerMysql databaseManager;
 	private InvMysqlInterface invMysqlInterface;
+	private boolean enabled = false;
 	
 	@Override
     public void onEnable() {
@@ -60,17 +61,18 @@ public class Inv extends JavaPlugin {
     	PluginManager pm = getServer().getPluginManager();
     	pm.registerEvents(new PlayerHandler(this), this);
     	
+    	enabled = true;
     	log.info("MysqlInventoryBridge has been successfully loaded!");
 	}
 	
 	@Override
     public void onDisable() {
-		if (this.isEnabled()) {
+		if (enabled == true) {
 			//Closing database connection
 			if (databaseManager.getConnection() != null) {
 				savePlayerData();
 				log.info("Closing MySQL connection...");
-				databaseManager.closeDatabase();
+				databaseManager.closeConnection();
 			}
 		}
 		log.info("MysqlInventoryBridge has been disabled");
@@ -126,7 +128,7 @@ public class Inv extends JavaPlugin {
 			if (useProtocolLib == true && getConfigHandler().getString("General.enableModdedItemsSupport").matches("true")) {
 				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(p.getInventory().getContents()), InventoryUtils.saveModdedStacksData(p.getInventory().getArmorContents()));
 			} else {
-				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.toBase64(p.getInventory()), InventoryUtils.itemStackArrayToBase64(p.getInventory().getArmorContents()));
+				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.itemStackArrayToBase64(p.getInventory().getContents()), InventoryUtils.itemStackArrayToBase64(p.getInventory().getArmorContents()));
 			}
 		}
     }

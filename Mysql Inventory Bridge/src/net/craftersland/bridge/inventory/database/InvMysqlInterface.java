@@ -18,11 +18,10 @@ public class InvMysqlInterface {
 	
 	public InvMysqlInterface(Inv inv) {
 		this.inv = inv;
-		this.conn = ((DatabaseManagerMysql)inv.getDatabaseManager()).getConnection();
 	}
 	
 	public boolean hasAccount(UUID player) {
-		inv.getDatabaseManager().checkConnection();
+		conn = inv.getDatabaseManager().getConnection();
 		try {
 	    	  tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 	 
@@ -43,7 +42,7 @@ public class InvMysqlInterface {
 	}
 	
 	public boolean createAccount(UUID uuid, Player player) {
-		inv.getDatabaseManager().checkConnection();
+		conn = inv.getDatabaseManager().getConnection();
 		try {
 			tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 			 
@@ -68,7 +67,7 @@ public class InvMysqlInterface {
 		if (!hasAccount(uuid)) {
 			createAccount(uuid, player);
 		}
-		
+		conn = inv.getDatabaseManager().getConnection();
         try {
         	tableName = inv.getConfigHandler().getString("database.mysql.tableName");
         	
@@ -92,7 +91,7 @@ public class InvMysqlInterface {
 		if (!hasAccount(uuid)) {
 			createAccount(uuid, null);
 		}
-		
+		conn = inv.getDatabaseManager().getConnection();
 	      try {
 	    	  tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 	 
@@ -115,7 +114,7 @@ public class InvMysqlInterface {
 		if (!hasAccount(uuid)) {
 			createAccount(uuid, null);
 		}
-		
+		conn = inv.getDatabaseManager().getConnection();
 	      try {
 	    	  tableName = inv.getConfigHandler().getString("database.mysql.tableName");
 	 
