@@ -1,6 +1,6 @@
 name: MysqlInventoryBridge
 main: net.craftersland.bridge.inventory.Inv
-version: 1.4
+version: 1.4.1
 author: CraftersLand
 website: www.craftersland.net
 load: STARTUP

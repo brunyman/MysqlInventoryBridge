@@ -1,5 +1,5 @@
 # default config.yml for MysqlInventoryBridge
-# config version 1.4
+# config version 1.4.1
 
 #MySQL Database details
 database:
@@ -33,4 +33,11 @@ General:
     syncArmorEnabled: true
     #Enable modded items support. This will require the ProtocolLib dependency! |  (true or false)
     #This is needed if you experience item data loss on some mods that save NBT data.
+    #WARNING! All the servers that are in sync must have this option set the same, or you will lose items.
     enableModdedItemsSupport: false
+    
+
+#Chat Messages with full color and format codes support. Disable any message by setting it to ''  |  Example>  syncComplete: ''
+#Minecraft Color and Format Codes: http://minecraft.gamepedia.com/Formatting_codes
+ChatMessages:
+    syncComplete: '&2[MIB] &aData sync complete!'
