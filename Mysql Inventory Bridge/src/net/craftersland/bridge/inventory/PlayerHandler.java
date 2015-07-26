@@ -1,5 +1,6 @@
 package net.craftersland.bridge.inventory;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ public class PlayerHandler implements Listener {
 	
 	private Inv inv;
 	private int delay = 1;
+	private HashMap<String, Boolean> playersSync = new HashMap<String, Boolean>();
 	
 	public PlayerHandler(Inv inv) {
 		this.inv = inv;
@@ -88,6 +90,7 @@ public class PlayerHandler implements Listener {
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 1);
 							p.updateInventory();
 						}
+						playersSync.put(p.getName(), true);
 					}
 				}, 5L);
 				inv.getInvMysqlInterface().setInventory(playerUUID, p, "none", "none");
@@ -103,6 +106,7 @@ public class PlayerHandler implements Listener {
 			public void run() {
 				String syncArmor = inv.getConfigHandler().getString("General.syncArmorEnabled");
 				final Player p = event.getPlayer();
+				if (playersSync.containsKey(p.getName()) == false) return;
 				final Inventory inventory = p.getInventory();
 				ItemStack[] armor = p.getInventory().getArmorContents();
 				
@@ -112,31 +116,34 @@ public class PlayerHandler implements Listener {
 					} else {
 						inv.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.itemStackArrayToBase64(inventory.getContents()), InventoryUtils.itemStackArrayToBase64(armor));
 					}
-					
-					Bukkit.getScheduler().runTaskLater(inv, new Runnable() {
-						@Override
-						public void run() {
-							p.getInventory().setHelmet(new ItemStack(Material.AIR));
-							p.getInventory().setChestplate(new ItemStack(Material.AIR));
-							p.getInventory().setLeggings(new ItemStack(Material.AIR));
-							p.getInventory().setBoots(new ItemStack(Material.AIR));
-							p.getInventory().clear();
-							p.saveData();
-						}
-					}, 5L);
+					if (inv.getConfigHandler().getString("General.disableItemClear").matches("false")) {
+						Bukkit.getScheduler().runTaskLater(inv, new Runnable() {
+							@Override
+							public void run() {
+								p.getInventory().setHelmet(new ItemStack(Material.AIR));
+								p.getInventory().setChestplate(new ItemStack(Material.AIR));
+								p.getInventory().setLeggings(new ItemStack(Material.AIR));
+								p.getInventory().setBoots(new ItemStack(Material.AIR));
+								p.getInventory().clear();
+								p.saveData();
+							}
+						}, 5L);
+					}
 				} else {
 					if (inv.useProtocolLib == true && inv.getConfigHandler().getString("General.enableModdedItemsSupport").matches("true")) {
 						inv.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(inventory.getContents()), "none");
 					} else {
 						inv.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.itemStackArrayToBase64(inventory.getContents()), "none");
 					}
-					Bukkit.getScheduler().runTaskLater(inv, new Runnable() {
-						@Override
-						public void run() {
-							p.getInventory().clear();
-							p.saveData();
-						}
-					}, 5L);
+					if (inv.getConfigHandler().getString("General.disableItemClear").matches("false")) {
+						Bukkit.getScheduler().runTaskLater(inv, new Runnable() {
+							@Override
+							public void run() {
+								p.getInventory().clear();
+								p.saveData();
+							}
+						}, 5L);
+					}
 				}
 			}
 		}, 5L);

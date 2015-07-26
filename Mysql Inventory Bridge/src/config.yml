@@ -1,5 +1,5 @@
 # default config.yml for MysqlInventoryBridge
-# config version 1.4.1
+# config version 1.4.2
 
 #MySQL Database details
 database:
@@ -31,6 +31,8 @@ General:
     loginSyncDelay: 1000
     #Set this to false to disable the sync of players armor. |  (true or false)
     syncArmorEnabled: true
+    #Disable clear of inventory and armor after data is uploaded to mysql.
+    disableItemClear: false
     #Enable modded items support. This will require the ProtocolLib dependency! |  (true or false)
     #This is needed if you experience item data loss on some mods that save NBT data.
     #WARNING! All the servers that are in sync must have this option set the same, or you will lose items.
