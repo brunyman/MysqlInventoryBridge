@@ -2,6 +2,7 @@ package net.craftersland.bridge.inventory;
 
 import java.io.File;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.craftersland.bridge.inventory.database.DatabaseManagerMysql;
@@ -16,6 +17,7 @@ public class Inv extends JavaPlugin {
 	
 	public static Logger log;
 	public boolean useProtocolLib;
+	public HashMap<String, Boolean> playersSync = new HashMap<String, Boolean>();
 	
 	private ConfigHandler configHandler;
 	private DatabaseManagerMysql databaseManager;
@@ -125,6 +127,7 @@ public class Inv extends JavaPlugin {
 		if (databaseManager.checkConnection() == false) return;
 		log.info("Saving players data...");
 		for (Player p : Bukkit.getOnlinePlayers()) {
+			if (playersSync.containsKey(p.getName()) == false) return;
 			if (useProtocolLib == true && getConfigHandler().getString("General.enableModdedItemsSupport").matches("true")) {
 				getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(p.getInventory().getContents()), InventoryUtils.saveModdedStacksData(p.getInventory().getArmorContents()));
 			} else {

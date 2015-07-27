@@ -1,6 +1,5 @@
 package net.craftersland.bridge.inventory;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -18,7 +17,6 @@ public class PlayerHandler implements Listener {
 	
 	private Inv inv;
 	private int delay = 1;
-	private HashMap<String, Boolean> playersSync = new HashMap<String, Boolean>();
 	
 	public PlayerHandler(Inv inv) {
 		this.inv = inv;
@@ -33,7 +31,10 @@ public class PlayerHandler implements Listener {
 		Bukkit.getScheduler().runTaskLaterAsynchronously(inv, new Runnable() {
 			@Override
 			public void run() {
-				if (inv.getInvMysqlInterface().hasAccount(event.getPlayer().getUniqueId()) == false) return;
+				if (inv.getInvMysqlInterface().hasAccount(event.getPlayer().getUniqueId()) == false) {
+					inv.playersSync.put(event.getPlayer().getName(), true);
+					return;
+				}
 				final Player p = event.getPlayer();
 				UUID playerUUID = event.getPlayer().getUniqueId();
 				if (inv.getInvMysqlInterface().getInventory(playerUUID).matches("none") && inv.getInvMysqlInterface().getArmor(playerUUID).matches("none")) return;
@@ -90,7 +91,7 @@ public class PlayerHandler implements Listener {
 							p.playSound(p.getLocation(), Sound.LEVEL_UP, 1, 1);
 							p.updateInventory();
 						}
-						playersSync.put(p.getName(), true);
+						inv.playersSync.put(p.getName(), true);
 					}
 				}, 5L);
 				inv.getInvMysqlInterface().setInventory(playerUUID, p, "none", "none");
@@ -106,7 +107,7 @@ public class PlayerHandler implements Listener {
 			public void run() {
 				String syncArmor = inv.getConfigHandler().getString("General.syncArmorEnabled");
 				final Player p = event.getPlayer();
-				if (playersSync.containsKey(p.getName()) == false) return;
+				if (inv.playersSync.containsKey(p.getName()) == false) return;
 				final Inventory inventory = p.getInventory();
 				ItemStack[] armor = p.getInventory().getArmorContents();
 				
