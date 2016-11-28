@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Alin/Desktop/1.8.7 Test/spigot-1.8.7.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Alin/Downloads/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alin/Desktop/work/server/spigot-1.9.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alin/Desktop/work/plugins/1.9.4/ProtocolLib-b275.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

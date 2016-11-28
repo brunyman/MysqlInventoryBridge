@@ -94,8 +94,7 @@ public class InventoryUtils {
         }
     }
 	
-	static String saveModdedStacksData(ItemStack[] itemStacks)
-	  {
+	public static String saveModdedStacksData(ItemStack[] itemStacks) {
 	    StringBuilder stringBuilder = new StringBuilder();
 	    for (int i = 0; i < itemStacks.length; i++)
 	    {
@@ -117,8 +116,7 @@ public class InventoryUtils {
 	    return string;
 	  }
 	
-	static ItemStack[] restoreModdedStacks(String string)
-	  {
+	public static ItemStack[] restoreModdedStacks(String string) {
 	    String[] strings = string.split(";");
 	    ItemStack[] itemStacks = new ItemStack[strings.length];
 	    for (int i = 0; i < strings.length; i++) {

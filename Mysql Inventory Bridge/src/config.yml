@@ -1,5 +1,5 @@
 # default config.yml for MysqlInventoryBridge
-# config version 1.4.3
+# config version 1.7.0
 
 #MySQL Database details
 database:
@@ -26,13 +26,20 @@ database:
         
 #Other configurable options
 General:
+    #Save online players accounts to database task. Disable this task and data will only be saved when the player disconnects.
+    #To limit data loss in case the server crashes enable this saving task. It runs async so there will be no lag involved.
+    saveDataTask:
+        #Enable or disable the data save task. | (true or false)
+        enabled: true
+        #Time between data saves in minutes. | Default 3 min.
+        interval: 3
+        #Hide the data save task log messages.
+        hideLogMessages: false
     #Login economy sync delay in milliseconds (default 1000 milliseconds = 1 second)
     #This delay is needed in bungeecord setups, because when you move between servers the quit and login takes place almost in the same time.
     loginSyncDelay: 1000
     #Set this to false to disable the sync of players armor. |  (true or false)
     syncArmorEnabled: true
-    #Disable clear of inventory and armor after data is uploaded to mysql.
-    disableItemClear: false
     #Enable modded items support. This will require the ProtocolLib dependency! |  (true or false)
     #This is needed if you experience item data loss on some mods that save NBT data.
     #WARNING! All the servers that are in sync must have this option set the same, or you will lose items.
