@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import net.craftersland.bridge.inventory.Inv;
 
@@ -29,9 +30,13 @@ public class MysqlSetup {
 		try {
        	 	//Load Drivers
             Class.forName("com.mysql.jdbc.Driver");
-            
+            Properties properties = new Properties();
+            properties.setProperty("user", eco.getConfigHandler().getString("database.mysql.user"));
+            properties.setProperty("password", eco.getConfigHandler().getString("database.mysql.password"));
+            properties.setProperty("useSSL", "false");
+            properties.setProperty("autoReconnect", "true");
             //Connect to database
-            conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName") + "?" + "user=" + eco.getConfigHandler().getString("database.mysql.user") + "&" + "password=" + eco.getConfigHandler().getString("database.mysql.password"));
+            conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName"), properties);
            
           } catch (ClassNotFoundException e) {
         	  Inv.log.severe("Could not locate drivers for mysql! Error: " + e.getMessage());
@@ -97,7 +102,12 @@ public class MysqlSetup {
 		    start = System.currentTimeMillis();
 		    Inv.log.info("Attempting to establish a connection to the MySQL server!");
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName") + "?" + "user=" + eco.getConfigHandler().getString("database.mysql.user") + "&" + "password=" + eco.getConfigHandler().getString("database.mysql.password"));
+            Properties properties = new Properties();
+            properties.setProperty("user", eco.getConfigHandler().getString("database.mysql.user"));
+            properties.setProperty("password", eco.getConfigHandler().getString("database.mysql.password"));
+            properties.setProperty("useSSL", "false");
+            properties.setProperty("autoReconnect", "true");
+            conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName"), properties);
 		    end = System.currentTimeMillis();
 		    Inv.log.info("Connection to MySQL server established!");
 		    Inv.log.info("Connection took " + ((end - start)) + "ms!");

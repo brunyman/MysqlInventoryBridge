@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import net.craftersland.bridge.inventory.database.InvMysqlInterface;
 import net.craftersland.bridge.inventory.database.MysqlSetup;
+import net.craftersland.bridge.inventory.events.DropItem;
+import net.craftersland.bridge.inventory.events.InventoryClick;
 import net.craftersland.bridge.inventory.events.PlayerJoin;
 import net.craftersland.bridge.inventory.events.PlayerQuit;
 
@@ -42,6 +44,8 @@ public class Inv extends JavaPlugin {
     	PluginManager pm = getServer().getPluginManager();
     	pm.registerEvents(new PlayerJoin(this), this);
     	pm.registerEvents(new PlayerQuit(this), this);
+    	pm.registerEvents(new DropItem(this), this);
+    	pm.registerEvents(new InventoryClick(this), this);
     	log.info(pluginName + " loaded successfully!");
 	}
 	
