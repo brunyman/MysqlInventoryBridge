@@ -33,8 +33,10 @@ public class MysqlSetup {
             Properties properties = new Properties();
             properties.setProperty("user", eco.getConfigHandler().getString("database.mysql.user"));
             properties.setProperty("password", eco.getConfigHandler().getString("database.mysql.password"));
-            properties.setProperty("useSSL", "false");
             properties.setProperty("autoReconnect", "true");
+            properties.setProperty("verifyServerCertificate", "false");
+            properties.setProperty("useSSL", eco.getConfigHandler().getString("database.mysql.sslEnabled"));
+            properties.setProperty("requireSSL", eco.getConfigHandler().getString("database.mysql.sslEnabled"));
             //Connect to database
             conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName"), properties);
            
@@ -105,8 +107,10 @@ public class MysqlSetup {
             Properties properties = new Properties();
             properties.setProperty("user", eco.getConfigHandler().getString("database.mysql.user"));
             properties.setProperty("password", eco.getConfigHandler().getString("database.mysql.password"));
-            properties.setProperty("useSSL", "false");
             properties.setProperty("autoReconnect", "true");
+            properties.setProperty("verifyServerCertificate", "false");
+            properties.setProperty("useSSL", eco.getConfigHandler().getString("database.mysql.sslEnabled"));
+            properties.setProperty("requireSSL", eco.getConfigHandler().getString("database.mysql.sslEnabled"));
             conn = DriverManager.getConnection("jdbc:mysql://" + eco.getConfigHandler().getString("database.mysql.host") + ":" + eco.getConfigHandler().getString("database.mysql.port") + "/" + eco.getConfigHandler().getString("database.mysql.databaseName"), properties);
 		    end = System.currentTimeMillis();
 		    Inv.log.info("Connection to MySQL server established!");
