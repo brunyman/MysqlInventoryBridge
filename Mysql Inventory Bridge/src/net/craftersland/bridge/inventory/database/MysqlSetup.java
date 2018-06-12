@@ -54,7 +54,7 @@ public class MysqlSetup {
 		if (conn != null) {
 			PreparedStatement query = null;
 		      try {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + eco.getConfigHandler().getString("database.mysql.tableName") + "` (id int(10) AUTO_INCREMENT, player_uuid char(36) NOT NULL UNIQUE, player_name varchar(16) NOT NULL, inventory LONGTEXT NOT NULL, armor LONGTEXT NOT NULL, last_seen char(13) NOT NULL, PRIMARY KEY(id));";
+		        String data = "CREATE TABLE IF NOT EXISTS `" + eco.getConfigHandler().getString("database.mysql.tableName") + "` (id int(10) AUTO_INCREMENT, player_uuid char(36) NOT NULL UNIQUE, player_name varchar(16) NOT NULL, inventory LONGTEXT NOT NULL, armor LONGTEXT NOT NULL, sync_complete varchar(5) NOT NULL, last_seen char(13) NOT NULL, PRIMARY KEY(id));";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) {
@@ -137,8 +137,10 @@ public class MysqlSetup {
 			DatabaseMetaData md = null;
 	    	ResultSet rs1 = null;
 	    	ResultSet rs2 = null;
+	    	ResultSet rs3 = null;
 	    	PreparedStatement query1 = null;
 	    	PreparedStatement query2 = null;
+	    	PreparedStatement query3 = null;
 			try {
 				md = conn.getMetaData();
 				rs1 = md.getColumns(null, null, eco.getConfigHandler().getString("database.mysql.tableName"), "inventory");
@@ -160,6 +162,14 @@ public class MysqlSetup {
 	            	}
 			    } else {
 			        
+			    }
+	            rs3 = md.getColumns(null, null, eco.getConfigHandler().getString("database.mysql.tableName"), "sync_complete");
+	            if (rs3.next()) {
+			    	
+			    } else {
+			        String data = "ALTER TABLE `" + eco.getConfigHandler().getString("database.mysql.tableName") + "` ADD sync_complete varchar(5) NOT NULL DEFAULT 'true';";
+			        query3 = conn.prepareStatement(data);
+			        query3.execute();
 			    }
 			} catch (Exception e) {
 				Inv.log.severe("Error updating table! Error: " + e.getMessage());

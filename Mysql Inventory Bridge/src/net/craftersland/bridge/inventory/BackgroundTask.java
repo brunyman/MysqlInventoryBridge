@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 public class BackgroundTask {
 	
@@ -42,7 +40,7 @@ public class BackgroundTask {
 				}
 				for (Player p : onlinePlayers) {
 					if (p.isOnline() == true) {
-						saveData(p);
+						m.getInventoryDataHandler().onDataSaveFunction(p, false, "false", null, null);
 					}
 				}
 				if (m.getConfigHandler().getBoolean("General.saveDataTask.hideLogMessages") == false) {
@@ -53,34 +51,13 @@ public class BackgroundTask {
 		}
 	}
 	
-	public void saveData(Player p) {
-		if (m.playersSync.contains(p.getName()) == true) {
-			Inventory inventory = p.getInventory();
-			ItemStack[] armor = p.getInventory().getArmorContents();
-			
-			if (m.getConfigHandler().getBoolean("General.syncArmorEnabled") == true) {
-				if (m.useProtocolLib == true && m.getConfigHandler().getBoolean("General.enableModdedItemsSupport") == true) {
-					m.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(inventory.getContents()), InventoryUtils.saveModdedStacksData(armor));
-				} else {
-					m.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.itemStackArrayToBase64(inventory.getContents()), InventoryUtils.itemStackArrayToBase64(armor));
-				}
-			} else {
-				if (m.useProtocolLib == true && m.getConfigHandler().getBoolean("General.enableModdedItemsSupport") == true) {
-					m.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.saveModdedStacksData(inventory.getContents()), "none");
-				} else {
-					m.getInvMysqlInterface().setInventory(p.getUniqueId(), p, InventoryUtils.itemStackArrayToBase64(inventory.getContents()), "none");
-				}
-			}
-		}
-	}
-	
 	public void onShutDownDataSave() {
 		Inv.log.info("Saving online players data...");
 		List<Player> onlinePlayers = new ArrayList<Player>(Bukkit.getOnlinePlayers());
 		
 		for (Player p : onlinePlayers) {
 			if (p.isOnline() == true) {
-				saveData(p);
+				m.getInventoryDataHandler().onDataSaveFunction(p, false, "true", null, null);
 			}
 		}
 		Inv.log.info("Data save complete for " + onlinePlayers.size() + " players.");

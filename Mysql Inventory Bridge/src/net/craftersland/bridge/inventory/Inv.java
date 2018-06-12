@@ -1,7 +1,5 @@
 package net.craftersland.bridge.inventory;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import net.craftersland.bridge.inventory.database.InvMysqlInterface;
@@ -21,13 +19,15 @@ public class Inv extends JavaPlugin {
 	public static Logger log;
 	public boolean useProtocolLib = false;
 	public static String pluginName = "MysqlInventoryBridge";
-	public Set<String> playersSync = new HashSet<String>();
-	public boolean is19Server = true;
+	//public Set<String> playersSync = new HashSet<String>();
+	public static boolean is19Server = true;
+	public static boolean isDisabling = false;
 	
 	private static ConfigHandler configHandler;
 	private static SoundHandler sH;
 	private static MysqlSetup databaseManager;
 	private static InvMysqlInterface invMysqlInterface;
+	private static InventoryDataHandler idH;
 	private static BackgroundTask bt;
 	
 	@Override
@@ -40,6 +40,7 @@ public class Inv extends JavaPlugin {
     	bt = new BackgroundTask(this);
     	databaseManager = new MysqlSetup(this);
     	invMysqlInterface = new InvMysqlInterface(this);
+    	idH = new InventoryDataHandler(this);
     	//Register Listeners
     	PluginManager pm = getServer().getPluginManager();
     	pm.registerEvents(new PlayerJoin(this), this);
@@ -51,6 +52,7 @@ public class Inv extends JavaPlugin {
 	
 	@Override
     public void onDisable() {
+		isDisabling = true;
 		Bukkit.getScheduler().cancelTasks(this);
 		HandlerList.unregisterAll(this);
 		if (databaseManager.getConnection() != null) {
@@ -74,6 +76,9 @@ public class Inv extends JavaPlugin {
 	}
 	public BackgroundTask getBackgroundTask() {
 		return bt;
+	}
+	public InventoryDataHandler getInventoryDataHandler() {
+		return idH;
 	}
 	
 	private boolean getMcVersion() {
