@@ -13,8 +13,10 @@ public class SoundHandler {
 	
 	public void sendPlingSound(Player p) {
 		if (pd.getConfigHandler().getBoolean("General.disableSounds") == false) {
-			if (Inv.is19Server == true) {
-				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 3F, 3F);
+			if (Inv.is13Server == true) {
+				p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 3F, 3F);
+			} else if (Inv.is19Server == true) {
+				p.playSound(p.getLocation(), Sound.valueOf("BLOCK_NOTE_PLING"), 3F, 3F);
 			} else {
 				p.playSound(p.getLocation(), Sound.valueOf("NOTE_PLING"), 3F, 3F);
 			}

@@ -1,5 +1,5 @@
 # default config.yml for MysqlInventoryBridge
-# config version 2.0.0
+# config version 2.1.0
 
 #MySQL Database details
 database:

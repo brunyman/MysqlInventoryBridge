@@ -56,13 +56,14 @@ public class InvMysqlInterface {
 		Connection conn = inv.getDatabaseManager().getConnection();
 		if (conn != null) {
 			try {
-				String sql = "INSERT INTO `" + inv.getConfigHandler().getString("database.mysql.tableName") + "`(`player_uuid`, `player_name`, `inventory`, `armor`, `last_seen`) " + "VALUES(?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `" + inv.getConfigHandler().getString("database.mysql.tableName") + "`(`player_uuid`, `player_name`, `inventory`, `armor`, `sync_complete`, `last_seen`) " + "VALUES(?, ?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
 		        preparedStatement.setString(1, player.getUniqueId().toString());
 		        preparedStatement.setString(2, player.getName());
 		        preparedStatement.setString(3, "none");
 		        preparedStatement.setString(4, "none");
-		        preparedStatement.setString(5, String.valueOf(System.currentTimeMillis()));
+		        preparedStatement.setString(5, "true");
+		        preparedStatement.setString(6, String.valueOf(System.currentTimeMillis()));
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
