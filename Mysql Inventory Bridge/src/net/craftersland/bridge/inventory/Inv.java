@@ -89,7 +89,7 @@ public class Inv extends JavaPlugin {
 	    if (version.matches("1.7.10") || version.matches("1.7.9") || version.matches("1.7.5") || version.matches("1.7.2") || version.matches("1.8.8") || version.matches("1.8.3") || version.matches("1.8.4") || version.matches("1.8")) {
 	    	is19Server = false;
 	    	return true;
-	    } else if (version.matches("1.13") || version.matches("1.13.1")) {
+	    } else if (version.matches("1.13") || version.matches("1.13.1") || version.matches("1.13.2")) {
 	    	is13Server = true;
 	    	return true;
 	    }
