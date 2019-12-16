@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/DATA/ServerWorkspace/Spigot/Plugins/1.14.2/ProtocolLib-b8.jar"/>
-	<classpathentry kind="lib" path="C:/DATA/ServerWorkspace/Spigot/Server/spigot-1.14.4.jar"/>
+	<classpathentry kind="lib" path="C:/DATA/ServerWorkspace/Spigot/Plugins/1.14.4/ProtocolLib-b9.jar"/>
+	<classpathentry kind="lib" path="C:/DATA/ServerWorkspace/Spigot/Server/spigot-1.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
