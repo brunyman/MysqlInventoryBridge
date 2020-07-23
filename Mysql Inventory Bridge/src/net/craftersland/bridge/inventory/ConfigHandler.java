@@ -12,11 +12,11 @@ public class ConfigHandler {
 	}
 	
 	public void loadConfig() {
-		File pluginFolder = new File("plugins" + System.getProperty("file.separator") + Inv.pluginName);
+		File pluginFolder = new File(inv.getDataFolder().getAbsolutePath());
 		if (pluginFolder.exists() == false) {
     		pluginFolder.mkdir();
     	}
-		File configFile = new File("plugins" + System.getProperty("file.separator") + Inv.pluginName + System.getProperty("file.separator") + "config.yml");
+		File configFile = new File(inv.getDataFolder() + System.getProperty("file.separator") + "config.yml");
 		if (configFile.exists() == false) {
 			Inv.log.info("No config file found! Creating new one...");
 			inv.saveDefaultConfig();
