@@ -29,7 +29,7 @@ public class MysqlSetup {
 		Inv.log.info("Connecting to the database...");
 		try {
        	 	//Load Drivers
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Properties properties = new Properties();
             properties.setProperty("user", eco.getConfigHandler().getString("database.mysql.user"));
             properties.setProperty("password", eco.getConfigHandler().getString("database.mysql.password"));
